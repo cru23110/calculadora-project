@@ -1,6 +1,6 @@
 import Button from './Button'
 
-export default function Keypad({ append, operate, calc, clear }) {
+export default function Keypad({ append, operate, calc, clear, toggleSign }) {
 
     const buttons = [
     '7','8','9','+',

@@ -12,6 +12,11 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser
     },
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    },
     plugins: {
       import: pluginImport,
       react: pluginReact
@@ -19,6 +24,7 @@ export default defineConfig([
     rules: {
       semi: ['error', 'never'],
       'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
       'import/no-unresolved': 'off'
     }
   }

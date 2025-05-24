@@ -1,46 +1,48 @@
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, screen } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import Calculator from '../components/Calculator'
 import { describe, it, expect } from 'vitest'
 
 describe('Calculator', () => {
-  it('muestra número al presionar botón', () => {
-    const { getByText } = render(<Calculator />)
-    fireEvent.click(getByText('7'))
-    expect(getByText('7')).toBeInTheDocument()
+  it('shows number when button is clicked', () => {
+    render(<Calculator />)
+    fireEvent.click(screen.getByText('7'))
+    expect(screen.getByRole('heading')).toHaveTextContent('7')
   })
 
-  it('realiza suma correctamente', () => {
-    const { getByText } = render(<Calculator />)
-    fireEvent.click(getByText('3'))
-    fireEvent.click(getByText('+'))
-    fireEvent.click(getByText('5'))
-    fireEvent.click(getByText('='))
-    expect(getByText('8')).toBeInTheDocument()
+  it('adds numbers correctly', () => {
+    render(<Calculator />)
+    fireEvent.click(screen.getByText('3'))
+    fireEvent.click(screen.getByText('+'))
+    fireEvent.click(screen.getByText('5'))
+    fireEvent.click(screen.getByText('='))
+    expect(screen.getByRole('heading')).toHaveTextContent('8')
   })
 
-  it('muestra ERROR si el número supera 999999999', () => {
-    const { getByText } = render(<Calculator />)
-    for (let i = 0; i < 9; i++) fireEvent.click(getByText('9'))
-    fireEvent.click(getByText('+'))
-    fireEvent.click(getByText('1'))
-    fireEvent.click(getByText('='))
-    expect(getByText('ERROR')).toBeInTheDocument()
+  it('shows ERROR for large numbers', () => {
+  render(<Calculator />)
+  const button9 = screen.getAllByText('9').find(el => el.tagName === 'BUTTON')
+  for (let i = 0; i < 9; i++) fireEvent.click(button9)
+  fireEvent.click(screen.getByText('+'))
+  fireEvent.click(screen.getByText('1'))
+  fireEvent.click(screen.getByText('='))
+  expect(screen.getByRole('heading')).toHaveTextContent('ERROR')
+})
+
+  it('shows ERROR when result is negative', () => {
+    render(<Calculator />)
+    fireEvent.click(screen.getByText('1'))
+    fireEvent.click(screen.getByText('-'))
+    fireEvent.click(screen.getByText('2'))
+    fireEvent.click(screen.getByText('='))
+    expect(screen.getByRole('heading')).toHaveTextContent('ERROR')
   })
 
-  it('muestra ERROR si el resultado es negativo', () => {
-    const { getByText } = render(<Calculator />)
-    fireEvent.click(getByText('1'))
-    fireEvent.click(getByText('-'))
-    fireEvent.click(getByText('2'))
-    fireEvent.click(getByText('='))
-    expect(getByText('ERROR')).toBeInTheDocument()
-  })
-
-  it('agrega correctamente punto decimal', () => {
-    const { getByText } = render(<Calculator />)
-    fireEvent.click(getByText('3'))
-    fireEvent.click(getByText('.'))
-    fireEvent.click(getByText('1'))
-    expect(getByText('3.1')).toBeInTheDocument()
+  it('handles decimal input', () => {
+    render(<Calculator />)
+    fireEvent.click(screen.getByText('3'))
+    fireEvent.click(screen.getByText('.'))
+    fireEvent.click(screen.getByText('1'))
+    expect(screen.getByRole('heading')).toHaveTextContent('3.1')
   })
 })
